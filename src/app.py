@@ -165,10 +165,10 @@ if __name__ == '__main__':
 
     app.run()
 
-    time.sleep(10)  # Wait for the Flask app to start
+    #time.sleep(10)  # Wait for the Flask app to start
 
     # Open the default browser to the main page of the Flask app
-    webbrowser.open('http://localhost:5000/')
+    #webbrowser.open('http://localhost:5000/')
 
     # Print app started message
     print('App started')

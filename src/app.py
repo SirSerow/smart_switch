@@ -150,6 +150,8 @@ def serial_listener():
                 print(f"Connected to {port}")
                 while True:
                     message = ser.readline().strip()
+                    if message:
+                        print(f"Received message: {message}")
                     execute_action(message)
                     # Send current action to the serial port
                     ser.write(current_action.encode())

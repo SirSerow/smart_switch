@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Configure Actions</title>
+</head>
+<body>
+    <h1>Configure Actions</h1>
+    <form action="/configure" method="POST">
+        <label for="action">Select Action:</label>
+        <select name="action" id="action">
+            <option value="make_call">Make Skype Call</option>
+            <option value="send_email">Send Email</option>
+            <option value="open_website">Open Website</option>
+        </select>
+        <br>
+
+        <!-- Fields for configuring specific actions -->
+        <div id="recipient_field" style="display:none;">
+            <label for="recipient">Recipient:</label>
+            <input type="text" name="recipient" id="recipient">
+            <br>
+        </div>
+
+        <div id="subject_field" style="display:none;">
+            <label for="subject">Email Subject:</label>
+            <input type="text" name="subject" id="subject">
+            <br>
+        </div>
+
+        <div id="url_field" style="display:none;">
+            <label for="url">Website URL:</label>
+            <input type="text" name="url" id="url">
+            <br>
+        </div>
+
+        <button type="submit">Save Configuration</button>
+    </form>
+
+    <script>
+        document.getElementById('action').addEventListener('change', function () {
+            var selectedAction = this.value;
+            var recipientField = document.getElementById('recipient_field');
+            var subjectField = document.getElementById('subject_field');
+            var urlField = document.getElementById('url_field');
+
+            recipientField.style.display = 'none';
+            subjectField.style.display = 'none';
+            urlField.style.display = 'none';
+
+            if (selectedAction === 'make_call') {
+                recipientField.style.display = 'block';
+            } else if (selectedAction === 'send_email') {
+                recipientField.style.display = 'block';
+                subjectField.style.display = 'block';
+            } else if (selectedAction === 'open_website') {
+                urlField.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

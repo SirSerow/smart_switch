@@ -20,6 +20,7 @@ import time
 import digitalio
 import board
 from PIL import Image, ImageOps
+import threading
 import numpy  # pylint: disable=unused-import
 #from adafruit_rgb_display import ili9341
 from adafruit_rgb_display import st7789  # pylint: disable=unused-import
@@ -168,44 +169,60 @@ class AnimatedGif:
             if auto_advance:
                 self.advance()
 
+def main():
+    # Config for display baudrate (default max is 64mhz):
+    BAUDRATE = 64000000
 
-# Config for display baudrate (default max is 64mhz):
-BAUDRATE = 64000000
+    # Setup SPI bus using hardware SPI:
+    spi = board.SPI()
 
-# Setup SPI bus using hardware SPI:
-spi = board.SPI()
+    # pylint: disable=line-too-long
+    # Create the display:
+    disp = st7789.ST7789(spi, height=240, y_offset=80, rotation=180,  # 1.3", 1.54" ST7789
+        cs=cs_pin,
+        dc=dc_pin,
+        rst=reset_pin,
+        baudrate=BAUDRATE,
+    )
+    # pylint: enable=line-too-long
 
-# pylint: disable=line-too-long
-# Create the display:
-# disp = st7789.ST7789(spi, rotation=90,                            # 2.0" ST7789
-disp = st7789.ST7789(spi, height=240, y_offset=80, rotation=180,  # 1.3", 1.54" ST7789
-# disp = st7789.ST7789(spi, rotation=90, width=135, height=240, x_offset=53, y_offset=40, # 1.14" ST7789
-# disp = st7789.ST7789(spi, rotation=90, width=172, height=320, x_offset=34, # 1.47" ST7789
-# disp = st7789.ST7789(spi, rotation=270, width=170, height=320, x_offset=35, # 1.9" ST7789
-# disp = hx8357.HX8357(spi, rotation=180,                           # 3.5" HX8357
-# disp = st7735.ST7735R(spi, rotation=90,                           # 1.8" ST7735R
-# disp = st7735.ST7735R(spi, rotation=270, height=128, x_offset=2, y_offset=3,   # 1.44" ST7735R
-# disp = st7735.ST7735R(spi, rotation=90, bgr=True, width=80,       # 0.96" MiniTFT Rev A ST7735R
-# disp = st7735.ST7735R(spi, rotation=90, invert=True, width=80,    # 0.96" MiniTFT Rev B ST7735R
-# x_offset=26, y_offset=1,
-# disp = ssd1351.SSD1351(spi, rotation=180,                         # 1.5" SSD1351
-# disp = ssd1351.SSD1351(spi, height=96, y_offset=32, rotation=180, # 1.27" SSD1351
-# disp = ssd1331.SSD1331(spi, rotation=180,                         # 0.96" SSD1331
-#disp = ili9341.ILI9341(
-    #spi,
-    #rotation=90,  # 2.2", 2.4", 2.8", 3.2" ILI9341
-    cs=cs_pin,
-    dc=dc_pin,
-    rst=reset_pin,
-    baudrate=BAUDRATE,
-)
-# pylint: enable=line-too-long
+    if disp.rotation % 180 == 90:
+        disp_height = disp.width  # we swap height/width to rotate it to landscape!
+        disp_width = disp.height
+    else:
+        disp_width = disp.width
+        disp_height = disp.height
 
-if disp.rotation % 180 == 90:
-    disp_height = disp.width  # we swap height/width to rotate it to landscape!
-    disp_width = disp.height
-else:
-    disp_width = disp.width
-    disp_height = disp.height
+    gif_player = AnimatedGif(disp, width=disp_width, height=disp_height, folder=".")
 
-gif_player = AnimatedGif(disp, width=disp_width, height=disp_height, folder=".")
+def display_thread(queue):
+    # Existing display setup code
+    BAUDRATE = 64000000
+    spi = board.SPI()
+
+    # Setup pins and display as per your existing configuration
+    disp = st7789.ST7789(spi, height=240, y_offset=80, rotation=180, 
+                         cs=cs_pin, dc=dc_pin, rst=reset_pin, baudrate=BAUDRATE)
+
+    # Determine display dimensions
+    if disp.rotation % 180 == 90:
+        height, width = disp.width, disp.height
+    else:
+        width, height = disp.width, disp.height
+
+    gif_player = AnimatedGif(disp, width=width, height=height, folder=".")
+
+    # Loop to process commands from the queue
+    while True:
+        if not queue.empty():
+            command = queue.get()
+            # Process the command, e.g., displaying a new GIF
+            # Example: if command is the path to a new GIF
+            #gif_player.load(command)
+            #gif_player.play()
+            #queue.task_done()
+
+
+if __name__ == "__main__":
+    main()
+

@@ -28,7 +28,7 @@ BAUD_RATE = 115200  # Set the baud rate to match your device configuration
 # URL of your Flask application for the serial port listener to make HTTP requests
 FLASK_URL = 'http://localhost:5000/execute_action'
 
-current_action = None
+current_action = "call"
 
 def send_email(recipient, subject, message):
     try:

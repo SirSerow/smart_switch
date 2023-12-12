@@ -23,10 +23,12 @@ SKYPE_PASSWORD = "your_skype_password"
 
 # Replace 'COMX' with your actual serial port name
 SERIAL_PORT = 'COMX'
-BAUD_RATE = 9600  # Set the baud rate to match your device configuration
+BAUD_RATE = 115200  # Set the baud rate to match your device configuration
 
 # URL of your Flask application for the serial port listener to make HTTP requests
 FLASK_URL = 'http://localhost:5000/execute_action'
+
+current_action = None
 
 def send_email(recipient, subject, message):
     try:
@@ -64,15 +66,18 @@ def open_website(url):
         return f'Error: {str(e)}'
 
 def execute_action(message):
-    if message == b'button_pressed':
+    if message == b'BUTTON PRESSED':
         # You can define the action based on your application logic.
         # For example, you can check some condition and execute different actions accordingly.
-        action = 'make_call'  # Replace with the appropriate action
-        if action == 'make_call':
-            return make_skype_call("skype_username_or_phone_number")
-        elif action == 'send_email':
+        action = 'call'  # Replace with the appropriate action
+        if action == 'call':
+            current_action = 'call'
+            return make_skype_call("skype_username_or_phone_number") 
+        elif action == 'email':
+            current_action = 'email'
             return send_email("recipient@example.com", "Test Email", "This is a test email.")
-        elif action == 'open_website':
+        elif action == 'link':
+            current_action = 'link'
             return open_website("https://example.com")
         else:
             return 'Unknown action'
@@ -115,14 +120,28 @@ def save_configuration():
 
 def serial_listener():
     try:
-        ser = serial.Serial(SERIAL_PORT, BAUD_RATE)
-        while True:
-            message = ser.readline().strip()
-            execute_action(message)
-    except serial.SerialException as e:
-        print(f"Serial port error: {str(e)}")
-    finally:
-        ser.close()
+        # List available serial ports
+        available_ports = list(serial.tools.list_ports.comports())
+
+        if not available_ports:
+            print("No serial ports found.")
+            return
+
+        for port, _, _ in available_ports:
+            try:
+                ser = serial.Serial(port, BAUD_RATE)
+                print(f"Connected to {port}")
+                while True:
+                    message = ser.readline().strip()
+                    execute_action(message)
+                    # Send current action to the serial port
+                    ser.write(current_action.encode('utf-8'))
+            except serial.SerialException as e:
+                print(f"Serial port error on {port}: {str(e)}")
+            finally:
+                ser.close()
+    except Exception as e:
+        print(f"Error: {str(e)}")
 
 if __name__ == '__main__':
     # Start the serial port listener in a separate thread

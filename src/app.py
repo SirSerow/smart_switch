@@ -122,7 +122,7 @@ def list_serial_ports():
     try:
         available_ports = []
         for i in range(0, 64):  # Check serial ports from /dev/tty0 to /dev/tty63
-            port = f"/dev/tty{i}"
+            port = f"/dev/ttyUSB{i}"
             try:
                 ser = serial.Serial(port)
                 ser.close()

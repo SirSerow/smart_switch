@@ -66,7 +66,7 @@ def open_website(url):
         return f'Error: {str(e)}'
 
 def execute_action(message):
-    if message == 'BUTTON PRESSED':
+    if message == b'Received: BUTTON PRESSED':
         print('Executing action')
         # You can define the action based on your application logic.
         # For example, you can check some condition and execute different actions accordingly.

@@ -150,6 +150,9 @@ def serial_listener():
                 while True:
                     message = ser.readline().strip()
                     execute_action(message)
+                    # Send current action to the serial port
+                    ser.write(current_action.encode())
+                    time.sleep(0.1)
             except serial.SerialException as e:
                 print(f"Serial port error on {port}: {str(e)}")
             finally:

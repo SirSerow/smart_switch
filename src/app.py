@@ -118,24 +118,38 @@ def save_configuration():
 
     return 'Configuration saved'
 
+def list_serial_ports():
+    try:
+        available_ports = []
+        for i in range(0, 64):  # Check serial ports from /dev/tty0 to /dev/tty63
+            port = f"/dev/tty{i}"
+            try:
+                ser = serial.Serial(port)
+                ser.close()
+                available_ports.append(port)
+            except (OSError, serial.SerialException):
+                pass
+        return available_ports
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return []
+
 def serial_listener():
     try:
         # List available serial ports
-        available_ports = list(serial.tools.list_ports.comports())
+        available_ports = list_serial_ports()
 
         if not available_ports:
             print("No serial ports found.")
             return
 
-        for port, _, _ in available_ports:
+        for port in available_ports:
             try:
                 ser = serial.Serial(port, BAUD_RATE)
                 print(f"Connected to {port}")
                 while True:
                     message = ser.readline().strip()
                     execute_action(message)
-                    # Send current action to the serial port
-                    ser.write(current_action.encode('utf-8'))
             except serial.SerialException as e:
                 print(f"Serial port error on {port}: {str(e)}")
             finally:
@@ -155,3 +169,6 @@ if __name__ == '__main__':
 
     # Open the default browser to the main page of the Flask app
     webbrowser.open('http://localhost:5000/')
+
+    # Print app started message
+    print('App started')

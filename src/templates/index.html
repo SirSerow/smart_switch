@@ -2,12 +2,22 @@
 <html>
 <head>
     <title>OLEC Web</title>
+    <style>
+        /* Define CSS classes for different connection states */
+        .connected {
+            color: green;
+        }
+        .disconnected {
+            color: red;
+        }
+    </style>
 </head>
 <body>
     <h1>OLEC Web</h1>
     <p>OLEC Web is a web application that allows you to control your computer using your phone or other computer.</p>
 
-    <p>Device connection check: {{ device_connected }}</p> <!-- Display current_action variable value -->
+    <!-- Display "connected" or "disconnected" text with the appropriate CSS class -->
+    <p>Device connection check: <span class="{{ 'connected' if device_connected else 'disconnected' }}">{{ 'Connected' if device_connected else 'Disconnected' }}</span></p>
     
     <h2>How to use</h2>
     
@@ -17,7 +27,8 @@
 
     <p>Current Action: {{ current_action }}</p> <!-- Display current_action variable value -->
 
-    <p>To configure current action, use the link below.</p>
+    <p>To configure the current action, use the link below.</p>
     <a href="/configure">Configure Actions</a>
 </body>
 </html>
+

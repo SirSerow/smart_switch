@@ -29,6 +29,7 @@ BAUD_RATE = 115200  # Set the baud rate to match your device configuration
 FLASK_URL = 'http://localhost:5000/execute_action'
 
 global current_action
+global device_connected
 
 current_action = 'call'
 
@@ -90,7 +91,8 @@ def execute_action(message):
 @app.route('/')
 def home():
     global current_action  # Access the global variable
-    return render_template('index.html', current_action=current_action)
+    global device_connected  # Access the global variable
+    return render_template('index.html', current_action=current_action, device_connected=device_connected)
 
 @app.route('/execute_action', methods=['POST'])
 def execute_serial_action():
@@ -153,18 +155,21 @@ def list_serial_ports():
         return []
 
 def serial_listener():
+    global device_connected  # Access the global variable
     try:
         # List available serial ports
         available_ports = list_serial_ports()
 
         if not available_ports:
             print("No serial ports found.")
+            device_connected = False
             return
-
+       
         for port in available_ports:
             try:
                 ser = serial.Serial(port, BAUD_RATE)
                 print(f"Connected to {port}")
+                device_connected = True
                 while True:
                     message = ser.readline().strip()
                     if message:

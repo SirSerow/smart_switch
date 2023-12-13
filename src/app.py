@@ -177,7 +177,7 @@ if __name__ == '__main__':
     serial_thread.daemon = True
     serial_thread.start()
 
-    app.run()
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
     #time.sleep(10)  # Wait for the Flask app to start
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 import serial
 import smtplib
 from email.mime.text import MIMEText
@@ -118,6 +118,14 @@ def save_configuration():
         # Save website configuration in a database or file
 
     return 'Configuration saved'
+
+@app.route('/gif')
+def display_gif():
+    return render_template('display_gif.html')
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('static', filename)
 
 def list_serial_ports():
     try:

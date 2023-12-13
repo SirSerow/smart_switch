@@ -70,16 +70,16 @@ def execute_action(message):
         print('Executing action')
         # You can define the action based on your application logic.
         # For example, you can check some condition and execute different actions accordingly.
-        action = 'link'  # Replace with the appropriate action
+        action = current_action  # Replace with the appropriate action
         if action == 'call':
             current_action = 'call'
             return make_skype_call("skype_username_or_phone_number") 
-        elif action == 'email':
-            current_action = 'email'
+        elif action == 'mail':
+            current_action = 'mail'
             return send_email("recipient@example.com", "Test Email", "This is a test email.")
         elif action == 'link':
             current_action = 'link'
-            return open_website("https://example.com")
+            return open_website("https://synkom.co.jp/")
         else:
             return 'Unknown action'
     else:

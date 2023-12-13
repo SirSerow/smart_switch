@@ -87,7 +87,8 @@ def execute_action(message):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    global current_action  # Access the global variable
+    return render_template('index.html', current_action=current_action)
 
 @app.route('/execute_action', methods=['POST'])
 def execute_serial_action():
@@ -101,7 +102,7 @@ def execute_serial_action():
 
 @app.route('/configure')
 def configure():
-    return render_template('index.html', current_action=current_action)
+    return render_template('configure.html')
 
 @app.route('/configure', methods=['POST'])
 def save_configuration():

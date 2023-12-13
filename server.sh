@@ -7,5 +7,5 @@ sleep 5
 
 # Open the default browser (if a display is available)
 if [ -n "$DISPLAY" ]; then
-    chromium-browser --start-fullscreen --kiosk http://0.0.0.0:5000/ #opening browser in fullscreen mode
+    chromium-browser --start-fullscreen --start-maximized http://0.0.0.0:5000/ #opening browser in fullscreen mode
 fi

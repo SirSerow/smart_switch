@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>Configure Actions</h1>
-    <form id="configure-form" method="POST">
+    <form action="/configure" method="POST">
         <label for="action">Select Action:</label>
         <select name="action" id="action">
             <option value="call">Make Skype Call</option>
@@ -33,10 +33,17 @@
             <br>
         </div>
 
-        <button type="button" id="set-button">Set</button>
+        <button type="submit">Save Configuration</button>
     </form>
 
-    <p id="selected-action">Selected Action: None</p>
+    <!-- Add "Set" and "Return to Main Page" buttons -->
+    <form action="/set_action" method="POST">
+        <button type="submit" name="set" value="true">Set</button>
+    </form>
+
+    <form action="/" method="GET">
+        <button type="submit">Return to Main Page</button>
+    </form>
 
     <script>
         document.getElementById('action').addEventListener('change', function () {
@@ -57,11 +64,6 @@
             } else if (selectedAction === 'link') {
                 urlField.style.display = 'block';
             }
-        });
-
-        document.getElementById('set-button').addEventListener('click', function () {
-            var selectedAction = document.getElementById('action').value;
-            document.getElementById('selected-action').textContent = 'Selected Action: ' + selectedAction;
         });
     </script>
 </body>

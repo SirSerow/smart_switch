@@ -13,7 +13,9 @@
 
     <img src="{{ url_for('serve_static', filename='example.gif') }}" alt="GIF Image">
 
-    <p>To configure current action use the link below.</p>
+    <p>Current Action: {{ current_action }}</p> <!-- Display current_action variable value -->
+
+    <p>To configure current action, use the link below.</p>
     <a href="/configure">Configure Actions</a>
 </body>
 </html>

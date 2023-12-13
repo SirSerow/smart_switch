@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, redirect
 import serial
 import smtplib
 from email.mime.text import MIMEText
@@ -101,7 +101,7 @@ def execute_serial_action():
 
 @app.route('/configure')
 def configure():
-    return render_template('configure.html')
+    return render_template('index.html', current_action=current_action)
 
 @app.route('/configure', methods=['POST'])
 def save_configuration():
@@ -126,6 +126,12 @@ def display_gif():
 @app.route('/static/<path:filename>')
 def serve_static(filename):
     return send_from_directory('static', filename)
+
+@app.route('/set_action', methods=['POST'])
+def set_action():
+    global current_action  # Access the global variable
+    current_action = request.form.get('action')
+    return redirect('/configure')  # Redirect back to the configuration page
 
 def list_serial_ports():
     try:

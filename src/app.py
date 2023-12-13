@@ -70,7 +70,7 @@ def execute_action(message):
         print('Executing action')
         # You can define the action based on your application logic.
         # For example, you can check some condition and execute different actions accordingly.
-        action = 'call'  # Replace with the appropriate action
+        action = 'link'  # Replace with the appropriate action
         if action == 'call':
             current_action = 'call'
             return make_skype_call("skype_username_or_phone_number") 

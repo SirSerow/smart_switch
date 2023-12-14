@@ -10,7 +10,7 @@ sleep 5
 if [ -n "$DISPLAY" ]; then
     
     # Start Chromium in kiosk mode
-    chromium-browser --app=http://0.0.0.0:5000/ --start-fullscreen --kiosk --start-maximized 
+    chromium-browser --app=http://0.0.0.0:5000/ --start-fullscreen --kiosk --start-maximized & 
 
     # Wait for Chromium to open (adjust the sleep duration if needed)
     sleep 15

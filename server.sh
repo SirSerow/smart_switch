@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Start the Flask application
 python3 /home/olec/smart_switch/src/app.py &
 
@@ -8,7 +7,5 @@ sleep 5
 
 # Open the default browser (if a display is available)
 if [ -n "$DISPLAY" ]; then
-    firefox-esr -fullscreen http://0.0.0.0:5000/ &
-    sleep 5 # Adjust the sleep duration as needed
-    xdotool search --onlyvisible --class "Firefox" windowactivate --sync key F11
+    xdg-open http://0.0.0.0:5000/
 fi

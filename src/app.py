@@ -33,6 +33,7 @@ global device_connected
 
 current_action = 'call'
 
+
 def send_email(recipient, subject, message):
     try:
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
@@ -61,9 +62,18 @@ def make_skype_call(recipient):
     except Exception as e:
         return f'Error: {str(e)}'
 
+@app.route('/big_button', methods=['GET', 'POST'])
+def big_button():
+    if request.method == 'POST':
+        # Execute the action function when the button is pressed
+        execute_action(b'Received: BUTTON PRESSED')
+        return redirect('/big_button')  # Redirect to the main page or any other page
+    return render_template('big_button.html', current_action=current_action)
+
 def open_website(url):
+    # This route should check if url is valid and then open it in a new tab
     try:
-        webbrowser.open(url)
+        requests.get(url)
         return 'Website opened'
     except Exception as e:
         return f'Error: {str(e)}'
@@ -174,9 +184,9 @@ def serial_listener():
                     message = ser.readline().strip()
                     if message:
                         print(f"Received message: {message}")
-                    execute_action(message)
-                    # Send current action to the serial port
-                    ser.write(current_action.encode())
+                        execute_action(message)
+                        # Send current action to the serial port
+                        ser.write(current_action.encode())
                     time.sleep(0.1)
             except serial.SerialException as e:
                 print(f"Serial port error on {port}: {str(e)}")
